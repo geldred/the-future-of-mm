@@ -43,21 +43,18 @@ const InsightDetail = ({
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [currentChart, setCurrentChart] = useState<ChartConfig | null>(null);
-
   useEffect(() => {
     // Scroll to the bottom card when component mounts
     const timer = setTimeout(() => {
       if (cardRef.current) {
-        cardRef.current.scrollIntoView({ 
-          behavior: 'smooth', 
-          block: 'center' 
+        cardRef.current.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center'
         });
       }
     }, 100);
-
     return () => clearTimeout(timer);
   }, []);
-
   const handleSendMessage = async (message: string) => {
     const userMessage: ChatMessage = {
       id: Date.now().toString(),
@@ -65,13 +62,10 @@ const InsightDetail = ({
       role: 'user',
       timestamp: new Date()
     };
-
     setChatMessages(prev => [...prev, userMessage]);
     setIsLoading(true);
-
     try {
       const response = await aiService.generateResponse(message, chatMessages);
-      
       const assistantMessage: ChatMessage = {
         id: (Date.now() + 1).toString(),
         content: response.content,
@@ -79,9 +73,8 @@ const InsightDetail = ({
         timestamp: new Date(),
         chartConfig: response.chartConfig
       };
-
       setChatMessages(prev => [...prev, assistantMessage]);
-      
+
       // Auto-generate chart if provided
       if (response.chartConfig) {
         setCurrentChart(response.chartConfig);
@@ -98,11 +91,9 @@ const InsightDetail = ({
       setIsLoading(false);
     }
   };
-
   const handleChartGenerated = (chartConfig: ChartConfig) => {
     setCurrentChart(chartConfig);
   };
-
   return <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       {/* Header */}
       <header className="bg-white shadow-sm border-b">
@@ -113,7 +104,7 @@ const InsightDetail = ({
                 <ArrowLeft className="w-4 h-4" />
                 Back
               </Button>
-              <div className="text-2xl font-bold text-blue-600">Capital One</div>
+              <div className="text-2xl font-bold text-blue-600">Big Lending Bank</div>
             </div>
             <div className="flex items-center gap-4">
               <Button variant="ghost" size="sm">Need help?</Button>
@@ -177,21 +168,13 @@ const InsightDetail = ({
                 {/* Chat Interface */}
                 <div className="mt-6">
                   <h4 className="font-semibold text-gray-900 mb-3">Ask Follow-up Questions</h4>
-                  <ChatInterface
-                    onSendMessage={handleSendMessage}
-                    messages={chatMessages}
-                    isLoading={isLoading}
-                    onChartGenerated={handleChartGenerated}
-                  />
+                  <ChatInterface onSendMessage={handleSendMessage} messages={chatMessages} isLoading={isLoading} onChartGenerated={handleChartGenerated} />
                 </div>
               </div>
 
               {/* Right Column - Visualization */}
               <div className="space-y-4">
-                {currentChart ? (
-                  <DynamicChart config={currentChart} />
-                ) : (
-                  <>
+                {currentChart ? <DynamicChart config={currentChart} /> : <>
                     <div>
                       <h3 className="text-xl font-semibold text-gray-900 mb-2">Total Monthly Spend</h3>
                       <p className="text-gray-600">
@@ -202,11 +185,11 @@ const InsightDetail = ({
                     <div className="h-80 w-full">
                       <ResponsiveContainer width="100%" height="100%">
                         <BarChart data={spendingData} margin={{
-                        top: 40,
-                        right: 30,
-                        left: 20,
-                        bottom: 5
-                      }}>
+                      top: 40,
+                      right: 30,
+                      left: 20,
+                      bottom: 5
+                    }}>
                           <XAxis dataKey="month" axisLine={false} tickLine={false} className="text-xs" />
                           <YAxis hide />
                           <Bar dataKey="amount" fill="#0f766e" radius={[4, 4, 0, 0]} className="hover:opacity-80 transition-opacity">
@@ -215,8 +198,7 @@ const InsightDetail = ({
                         </BarChart>
                       </ResponsiveContainer>
                     </div>
-                  </>
-                )}
+                  </>}
               </div>
             </div>
           </CardContent>
