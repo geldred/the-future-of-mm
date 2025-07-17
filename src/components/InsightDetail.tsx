@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, TrendingUp } from 'lucide-react';
@@ -36,6 +36,22 @@ const spendingData = [{
 const InsightDetail = ({
   onBackClick
 }: InsightDetailProps) => {
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // Scroll to the bottom card when component mounts
+    const timer = setTimeout(() => {
+      if (cardRef.current) {
+        cardRef.current.scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'center' 
+        });
+      }
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   return <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       {/* Header */}
       <header className="bg-white shadow-sm border-b">
@@ -68,7 +84,7 @@ const InsightDetail = ({
         </div>
 
         {/* Combined Insight Card */}
-        <Card className="bg-white shadow-lg border-0 animate-[highlight-border_1s_ease-in-out_forwards]">
+        <Card ref={cardRef} className="bg-white shadow-lg border-0 animate-[highlight-border_2s_ease-in-out_forwards]">
           <CardHeader>
             <CardTitle className="text-2xl font-semibold text-gray-900 flex items-center gap-2">
               <TrendingUp className="w-6 h-6 text-blue-600" />
