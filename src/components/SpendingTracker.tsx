@@ -14,7 +14,8 @@ const SpendingTracker = () => {
   const currentAmount = isLoaded ? Math.round(csvService.getCurrentMonthSpending()) : 0;
   const lastMonthAmount = isLoaded ? Math.round(csvService.getPreviousMonthSpending()) : 0;
   
-  const currentMonth = new Date().toLocaleString('default', { month: 'long' });
+  // Use June since that's when our data ends
+  const currentMonth = "June";
   const difference = currentAmount - lastMonthAmount;
   const percentChange = lastMonthAmount > 0 ? ((difference / lastMonthAmount) * 100).toFixed(1) : '0.0';
   const isIncrease = difference > 0;
