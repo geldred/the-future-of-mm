@@ -1,13 +1,27 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+
+import React, { useState } from 'react';
+import Dashboard from '@/components/Dashboard';
+import InsightDetail from '@/components/InsightDetail';
 
 const Index = () => {
+  const [showInsightDetail, setShowInsightDetail] = useState(false);
+
+  const handleInsightClick = () => {
+    setShowInsightDetail(true);
+  };
+
+  const handleBackClick = () => {
+    setShowInsightDetail(false);
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
-    </div>
+    <>
+      {!showInsightDetail ? (
+        <Dashboard onInsightClick={handleInsightClick} />
+      ) : (
+        <InsightDetail onBackClick={handleBackClick} />
+      )}
+    </>
   );
 };
 
