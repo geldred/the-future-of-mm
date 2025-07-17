@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -9,40 +10,26 @@ import { ChatInterface, ChatMessage, ChartConfig } from './ChatInterface';
 import { DynamicChart } from './DynamicChart';
 import { aiService } from '@/services/aiService';
 import { Link } from 'react-router-dom';
+import { csvService } from '@/services/csvService';
+import { useCSVData } from '@/hooks/useCSVData';
 
 interface InsightDetailProps {}
-
-const spendingData = [{
-  month: 'Feb',
-  amount: 1800,
-  label: '$1800'
-}, {
-  month: 'Mar',
-  amount: 2200,
-  label: '$2200'
-}, {
-  month: 'Apr',
-  amount: 1800,
-  label: '$1800'
-}, {
-  month: 'May',
-  amount: 2200,
-  label: '$2200'
-}, {
-  month: 'Jun',
-  amount: 1800,
-  label: '$1800'
-}, {
-  month: 'Jul',
-  amount: 2800,
-  label: '$2800'
-}];
 
 const InsightDetail = ({}: InsightDetailProps) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [currentChart, setCurrentChart] = useState<ChartConfig | null>(null);
+  const { isLoaded } = useCSVData();
+
+  // Get real data from CSV service
+  const trends = isLoaded ? csvService.getSpendingTrends() : [];
+  const currentSpending = isLoaded ? Math.round(csvService.getCurrentMonthSpending()) : 0;
+  const previousSpending = isLoaded ? Math.round(csvService.getPreviousMonthSpending()) : 0;
+  const categories = isLoaded ? csvService.getCategoryBreakdown() : [];
+  
+  const spendingIncrease = currentSpending - previousSpending;
+  const topCategory = categories[0];
 
   useEffect(() => {
     // Scroll to the bottom card when component mounts
@@ -98,6 +85,16 @@ const InsightDetail = ({}: InsightDetailProps) => {
     setCurrentChart(chartConfig);
   };
 
+  if (!isLoaded) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+        <div className="flex items-center justify-center h-screen">
+          <div className="animate-pulse text-gray-600">Loading data...</div>
+        </div>
+      </div>
+    );
+  }
+
   return <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       {/* Header */}
       <header className="bg-white shadow-sm border-b">
@@ -134,7 +131,7 @@ const InsightDetail = ({}: InsightDetailProps) => {
           <CardHeader>
             <CardTitle className="text-2xl font-semibold text-gray-900 flex items-center gap-2">
               <TrendingUp className="w-6 h-6 text-blue-600" />
-              Monthly Spend Recap
+              Monthly Spend Recap - June 2025
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -144,11 +141,11 @@ const InsightDetail = ({}: InsightDetailProps) => {
                 <ul className="space-y-3 text-gray-700">
                   <li className="flex items-start gap-2">
                     <div className="w-2 h-2 bg-blue-600 rounded-full mt-2 flex-shrink-0"></div>
-                    <span>Your spending increased significantly in July, reaching $2,800 compared to your average of $2,000</span>
+                    <span>Your spending in June was ${currentSpending.toLocaleString()}, {spendingIncrease > 0 ? `$${spendingIncrease.toLocaleString()} more` : `$${Math.abs(spendingIncrease).toLocaleString()} less`} than May</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <div className="w-2 h-2 bg-blue-600 rounded-full mt-2 flex-shrink-0"></div>
-                    <span>The largest increase was in dining and entertainment categories</span>
+                    <span>{topCategory ? `Your largest expense category was ${topCategory.name} at $${topCategory.amount.toLocaleString()} (${topCategory.value}% of total)` : 'Loading category breakdown...'}</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <div className="w-2 h-2 bg-blue-600 rounded-full mt-2 flex-shrink-0"></div>
@@ -159,9 +156,11 @@ const InsightDetail = ({}: InsightDetailProps) => {
                 <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-100">
                   <h4 className="font-semibold text-gray-900 mb-2">Key Recommendations</h4>
                   <p className="text-gray-700 text-sm leading-relaxed">
-                    Based on your spending patterns, we recommend creating a monthly dining budget of $800 
-                    and setting up automatic alerts when you reach 75% of your limit. This can help you 
-                    maintain consistent spending habits while still enjoying your favorite activities.
+                    {topCategory ? (
+                      `Based on your spending patterns, we recommend creating a monthly ${topCategory.name.toLowerCase()} budget of $${Math.round(topCategory.amount * 0.8).toLocaleString()} and setting up automatic alerts when you reach 75% of your limit.`
+                    ) : (
+                      'Based on your spending patterns, we recommend setting up category-based budgets and automatic alerts to help maintain consistent spending habits.'
+                    )}
                   </p>
                 </div>
 
@@ -178,13 +177,13 @@ const InsightDetail = ({}: InsightDetailProps) => {
                     <div>
                       <h3 className="text-xl font-semibold text-gray-900 mb-2">Total Monthly Spend</h3>
                       <p className="text-gray-600">
-                        You spent $1000 more than last month.
+                        You spent ${Math.abs(spendingIncrease).toLocaleString()} {spendingIncrease > 0 ? 'more' : 'less'} than last month.
                       </p>
                     </div>
                     
                     <div className="h-80 w-full">
                       <ResponsiveContainer width="100%" height="100%">
-                        <BarChart data={spendingData} margin={{
+                        <BarChart data={trends} margin={{
                       top: 40,
                       right: 30,
                       left: 20,
@@ -193,7 +192,7 @@ const InsightDetail = ({}: InsightDetailProps) => {
                           <XAxis dataKey="month" axisLine={false} tickLine={false} className="text-xs" />
                           <YAxis hide />
                           <Bar dataKey="amount" fill="#0f766e" radius={[4, 4, 0, 0]} className="hover:opacity-80 transition-opacity">
-                            <LabelList dataKey="label" position="top" className="text-xs font-medium fill-gray-600" />
+                            <LabelList dataKey="amount" position="top" className="text-xs font-medium fill-gray-600" formatter={(value: number) => `$${Math.round(value / 1000)}k`} />
                           </Bar>
                         </BarChart>
                       </ResponsiveContainer>
