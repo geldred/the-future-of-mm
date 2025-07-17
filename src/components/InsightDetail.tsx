@@ -58,17 +58,18 @@ const InsightDetail = ({ onBackClick }: InsightDetailProps) => {
           <CategoryBreakdown />
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Left Column - Insight Text */}
-          <div className="space-y-6">
-            <Card className="bg-white shadow-lg border-0">
-              <CardHeader>
-                <CardTitle className="text-2xl font-semibold text-gray-900 flex items-center gap-2">
-                  <TrendingUp className="w-6 h-6 text-blue-600" />
-                  Insight Text
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
+        {/* Combined Insight Card */}
+        <Card className="bg-white shadow-lg border-0">
+          <CardHeader>
+            <CardTitle className="text-2xl font-semibold text-gray-900 flex items-center gap-2">
+              <TrendingUp className="w-6 h-6 text-blue-600" />
+              Spending Insight
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {/* Left Column - Insight Text */}
+              <div className="space-y-4">
                 <ul className="space-y-3 text-gray-700">
                   <li className="flex items-start gap-2">
                     <div className="w-2 h-2 bg-blue-600 rounded-full mt-2 flex-shrink-0"></div>
@@ -92,22 +93,19 @@ const InsightDetail = ({ onBackClick }: InsightDetailProps) => {
                     maintain consistent spending habits while still enjoying your favorite activities.
                   </p>
                 </div>
-              </CardContent>
-            </Card>
-          </div>
+              </div>
 
-          {/* Right Column - Visualization */}
-          <div className="space-y-6">
-            <Card className="bg-white shadow-lg border-0">
-              <CardHeader>
-                <CardTitle className="text-2xl font-semibold text-gray-900">
-                  Your monthly spending
-                </CardTitle>
-                <p className="text-gray-600 mt-2">
-                  You spent $1000 more than last month.
-                </p>
-              </CardHeader>
-              <CardContent>
+              {/* Right Column - Visualization */}
+              <div className="space-y-4">
+                <div>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                    Your monthly spending
+                  </h3>
+                  <p className="text-gray-600">
+                    You spent $1000 more than last month.
+                  </p>
+                </div>
+                
                 <div className="h-80 w-full">
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart data={spendingData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
@@ -129,7 +127,7 @@ const InsightDetail = ({ onBackClick }: InsightDetailProps) => {
                 </div>
                 
                 {/* Data Labels */}
-                <div className="flex justify-between items-center mt-4 text-sm text-gray-600">
+                <div className="flex justify-between items-center text-sm text-gray-600">
                   {spendingData.map((item, index) => (
                     <div key={item.month} className="text-center">
                       <div className={`font-medium ${index === spendingData.length - 1 ? 'text-teal-600' : 'text-gray-900'}`}>
@@ -141,7 +139,7 @@ const InsightDetail = ({ onBackClick }: InsightDetailProps) => {
                 </div>
 
                 {/* Highlight box for latest month */}
-                <div className="mt-6 p-4 bg-teal-50 rounded-lg border border-teal-100">
+                <div className="p-4 bg-teal-50 rounded-lg border border-teal-100">
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-medium text-gray-700">July Spending</span>
                     <span className="text-lg font-bold text-teal-600">+$1000</span>
@@ -150,10 +148,10 @@ const InsightDetail = ({ onBackClick }: InsightDetailProps) => {
                     40% increase from your average monthly spending
                   </p>
                 </div>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </main>
     </div>
   );
