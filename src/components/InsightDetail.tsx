@@ -1,10 +1,13 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, TrendingUp } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, LabelList } from 'recharts';
 import SpendingTracker from './SpendingTracker';
 import CategoryBreakdown from './CategoryBreakdown';
+import { ChatInterface, ChatMessage, ChartConfig } from './ChatInterface';
+import { DynamicChart } from './DynamicChart';
+import { aiService } from '@/services/aiService';
 interface InsightDetailProps {
   onBackClick: () => void;
 }
@@ -37,6 +40,9 @@ const InsightDetail = ({
   onBackClick
 }: InsightDetailProps) => {
   const cardRef = useRef<HTMLDivElement>(null);
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [currentChart, setCurrentChart] = useState<ChartConfig | null>(null);
 
   useEffect(() => {
     // Scroll to the bottom card when component mounts
@@ -51,6 +57,51 @@ const InsightDetail = ({
 
     return () => clearTimeout(timer);
   }, []);
+
+  const handleSendMessage = async (message: string) => {
+    const userMessage: ChatMessage = {
+      id: Date.now().toString(),
+      content: message,
+      role: 'user',
+      timestamp: new Date()
+    };
+
+    setChatMessages(prev => [...prev, userMessage]);
+    setIsLoading(true);
+
+    try {
+      const response = await aiService.generateResponse(message, chatMessages);
+      
+      const assistantMessage: ChatMessage = {
+        id: (Date.now() + 1).toString(),
+        content: response.content,
+        role: 'assistant',
+        timestamp: new Date(),
+        chartConfig: response.chartConfig
+      };
+
+      setChatMessages(prev => [...prev, assistantMessage]);
+      
+      // Auto-generate chart if provided
+      if (response.chartConfig) {
+        setCurrentChart(response.chartConfig);
+      }
+    } catch (error) {
+      const errorMessage: ChatMessage = {
+        id: (Date.now() + 1).toString(),
+        content: "Sorry, I'm having trouble processing your request. Please try again.",
+        role: 'assistant',
+        timestamp: new Date()
+      };
+      setChatMessages(prev => [...prev, errorMessage]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleChartGenerated = (chartConfig: ChartConfig) => {
+    setCurrentChart(chartConfig);
+  };
 
   return <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       {/* Header */}
@@ -122,34 +173,50 @@ const InsightDetail = ({
                     maintain consistent spending habits while still enjoying your favorite activities.
                   </p>
                 </div>
+
+                {/* Chat Interface */}
+                <div className="mt-6">
+                  <h4 className="font-semibold text-gray-900 mb-3">Ask Follow-up Questions</h4>
+                  <ChatInterface
+                    onSendMessage={handleSendMessage}
+                    messages={chatMessages}
+                    isLoading={isLoading}
+                    onChartGenerated={handleChartGenerated}
+                  />
+                </div>
               </div>
 
               {/* Right Column - Visualization */}
               <div className="space-y-4">
-                <div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">Total Monthly Spend</h3>
-                  <p className="text-gray-600">
-                    You spent $1000 more than last month.
-                  </p>
-                </div>
-                
-                <div className="h-80 w-full">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={spendingData} margin={{
-                    top: 40,
-                    right: 30,
-                    left: 20,
-                    bottom: 5
-                  }}>
-                      <XAxis dataKey="month" axisLine={false} tickLine={false} className="text-xs" />
-                      <YAxis hide />
-                      <Bar dataKey="amount" fill="#0f766e" radius={[4, 4, 0, 0]} className="hover:opacity-80 transition-opacity">
-                        <LabelList dataKey="label" position="top" className="text-xs font-medium fill-gray-600" />
-                      </Bar>
-                    </BarChart>
-                  </ResponsiveContainer>
-                </div>
-
+                {currentChart ? (
+                  <DynamicChart config={currentChart} />
+                ) : (
+                  <>
+                    <div>
+                      <h3 className="text-xl font-semibold text-gray-900 mb-2">Total Monthly Spend</h3>
+                      <p className="text-gray-600">
+                        You spent $1000 more than last month.
+                      </p>
+                    </div>
+                    
+                    <div className="h-80 w-full">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <BarChart data={spendingData} margin={{
+                        top: 40,
+                        right: 30,
+                        left: 20,
+                        bottom: 5
+                      }}>
+                          <XAxis dataKey="month" axisLine={false} tickLine={false} className="text-xs" />
+                          <YAxis hide />
+                          <Bar dataKey="amount" fill="#0f766e" radius={[4, 4, 0, 0]} className="hover:opacity-80 transition-opacity">
+                            <LabelList dataKey="label" position="top" className="text-xs font-medium fill-gray-600" />
+                          </Bar>
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </CardContent>
