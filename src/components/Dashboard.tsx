@@ -65,7 +65,7 @@ const Dashboard = ({
             <CardContent className="p-6">
               <div className="flex justify-between items-start mb-4">
                 <div>
-                  <h3 className="text-lg font-medium mb-1">360 Checking</h3>
+                  <h3 className="text-lg font-medium mb-1">720 Checking</h3>
                   <p className="text-xs text-gray-300">...4846</p>
                 </div>
                 <CreditCard className="w-6 h-6 text-gray-300" />
