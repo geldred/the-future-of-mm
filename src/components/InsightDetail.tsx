@@ -3,7 +3,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, TrendingUp } from 'lucide-react';
-import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, LabelList } from 'recharts';
 import SpendingTracker from './SpendingTracker';
 import CategoryBreakdown from './CategoryBreakdown';
 
@@ -108,7 +108,7 @@ const InsightDetail = ({ onBackClick }: InsightDetailProps) => {
                 
                 <div className="h-80 w-full">
                   <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={spendingData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                    <BarChart data={spendingData} margin={{ top: 40, right: 30, left: 20, bottom: 5 }}>
                       <XAxis 
                         dataKey="month" 
                         axisLine={false}
@@ -121,21 +121,15 @@ const InsightDetail = ({ onBackClick }: InsightDetailProps) => {
                         fill="#0f766e"
                         radius={[4, 4, 0, 0]}
                         className="hover:opacity-80 transition-opacity"
-                      />
+                      >
+                        <LabelList 
+                          dataKey="label" 
+                          position="top" 
+                          className="text-xs font-medium fill-gray-600"
+                        />
+                      </Bar>
                     </BarChart>
                   </ResponsiveContainer>
-                </div>
-                
-                {/* Data Labels */}
-                <div className="flex justify-between items-center text-sm text-gray-600">
-                  {spendingData.map((item, index) => (
-                    <div key={item.month} className="text-center">
-                      <div className={`font-medium ${index === spendingData.length - 1 ? 'text-teal-600' : 'text-gray-900'}`}>
-                        {item.label}
-                      </div>
-                      <div className="text-xs">{item.month}</div>
-                    </div>
-                  ))}
                 </div>
 
                 {/* Highlight box for latest month */}
