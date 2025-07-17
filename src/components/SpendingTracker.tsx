@@ -67,7 +67,7 @@ const SpendingTracker = () => {
       <CardContent className="pt-0">
         <div className="h-48 w-full mb-6">
           <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={monthlyData.length > 0 ? monthlyData : [{ day: '01', amount: 0 }]} margin={{ top: 20, right: 5, left: 5, bottom: 5 }}>
+            <AreaChart data={monthlyData.length > 0 ? monthlyData : [{ day: '01', amount: 0 }]} margin={{ top: 30, right: 15, left: 15, bottom: 5 }}>
               <defs>
                 <linearGradient id="spendingGradient" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="0%" stopColor="#0f766e" stopOpacity={0.3} />
@@ -87,15 +87,21 @@ const SpendingTracker = () => {
                 strokeWidth={2}
                 fill="url(#spendingGradient)"
                 dot={{ r: 4, fill: "#0f766e", strokeWidth: 0 }}
-              >
-                <LabelList 
-                  dataKey="amount" 
-                  position="top" 
-                  offset={10}
-                  className="text-xs font-medium fill-gray-600" 
-                  formatter={(value: number) => `$${Math.round(value / 1000)}k`}
-                />
-              </Area>
+                activeDot={{ r: 6, fill: "#0f766e" }}
+              />
+              <LabelList 
+                dataKey="amount" 
+                content={({ x, y, value }) => (
+                  <text 
+                    x={x} 
+                    y={y - 15} 
+                    textAnchor="middle" 
+                    className="text-xs font-medium fill-gray-700"
+                  >
+                    ${Math.round(value / 1000)}k
+                  </text>
+                )}
+              />
             </AreaChart>
           </ResponsiveContainer>
         </div>
