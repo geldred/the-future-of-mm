@@ -15,7 +15,7 @@ const Dashboard = ({
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
               <div className="flex-shrink-0">
-                <div className="text-2xl font-bold text-blue-600">Capital One</div>
+                <div className="text-2xl font-bold text-blue-600">Big Lending Bank</div>
               </div>
             </div>
             <div className="flex items-center gap-4">
