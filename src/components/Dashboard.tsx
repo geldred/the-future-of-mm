@@ -33,14 +33,9 @@ const Dashboard = ({ onInsightClick }: DashboardProps) => {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Page Title */}
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold text-gray-900">Plan & Spend</h1>
-        </div>
-
         {/* Greeting */}
         <div className="mb-8">
-          <h2 className="text-2xl font-medium text-gray-900">Good Evening</h2>
+          <h1 className="text-2xl font-medium text-gray-900">Good Evening</h1>
         </div>
 
         {/* Account Cards Grid */}
