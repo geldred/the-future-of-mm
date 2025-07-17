@@ -2,12 +2,14 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { CreditCard, TrendingUp, Eye, Gift } from 'lucide-react';
-interface DashboardProps {
-  onInsightClick: () => void;
-}
-const Dashboard = ({
-  onInsightClick
-}: DashboardProps) => {
+import { useNavigate } from 'react-router-dom';
+
+const Dashboard = () => {
+  const navigate = useNavigate();
+
+  const handleInsightClick = () => {
+    navigate('/insights');
+  };
   return <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       {/* Header */}
       <header className="bg-white shadow-sm border-b">
@@ -92,7 +94,7 @@ const Dashboard = ({
         {/* Bottom Section Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Monthly Spend Insight */}
-          <Card className="bg-white border shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer group" onClick={onInsightClick}>
+          <Card className="bg-white border shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer group" onClick={handleInsightClick}>
             <CardContent className="p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors">
                 Monthly Spend Recap
