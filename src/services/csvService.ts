@@ -1,3 +1,4 @@
+
 import { Transaction, CategorySummary, MonthlySpending, SpendingTrends } from '@/types';
 
 class CSVService {
@@ -6,7 +7,7 @@ class CSVService {
   // Category emoji mapping
   private categoryEmojis: Record<string, string> = {
     'Dining': '🍽️',
-    'Groceries': '🛒',
+    'Grocery': '🛒',
     'Entertainment': '🎬',
     'Transportation': '🚗',
     'Shopping': '🛍️',
@@ -23,23 +24,44 @@ class CSVService {
     'Utilities': '💡',
     'Internet': '🌐',
     'Phone': '📱',
-    'Subscription': '📺'
+    'Subscription': '📺',
+    'Subscriptions': '📺',
+    'Kids': '👶',
+    'Luxury Retail': '💎'
   };
 
   async loadCSVData(csvContent: string): Promise<void> {
     const lines = csvContent.trim().split('\n');
     const headers = lines[0].split(',').map(h => h.trim());
     
-    this.transactions = lines.slice(1).map(line => {
+    console.log('CSV Headers:', headers);
+    
+    this.transactions = lines.slice(1).map((line, index) => {
       const values = line.split(',').map(v => v.trim());
-      return {
-        account_id: values[0],
-        transaction_date: values[1],
-        transaction_category: values[2],
-        transaction_amount: Math.abs(parseFloat(values[3])), // Use absolute value for spending
-        transaction_description: values[4]
+      
+      // Based on the actual CSV structure
+      const transaction = {
+        account_id: values[4] || '', // account_id
+        transaction_date: values[13] || '', // transaction_date  
+        transaction_category: values[10] || '', // category_display_name
+        transaction_amount: Math.abs(parseFloat(values[12]) || 0), // transaction_amount (make positive)
+        transaction_description: values[7] || '' // transaction_display_name
       };
-    }).filter(t => !isNaN(t.transaction_amount) && t.transaction_amount > 0);
+      
+      if (index < 5) {
+        console.log(`Transaction ${index}:`, transaction);
+      }
+      
+      return transaction;
+    }).filter(t => 
+      !isNaN(t.transaction_amount) && 
+      t.transaction_amount > 0 &&
+      t.transaction_category &&
+      t.transaction_date
+    );
+    
+    console.log(`Loaded ${this.transactions.length} valid transactions`);
+    console.log('Sample transactions:', this.transactions.slice(0, 3));
   }
 
   getCategoryBreakdown(): CategorySummary[] {
@@ -53,6 +75,9 @@ class CSVService {
       totalSpending += transaction.transaction_amount;
     });
 
+    console.log('Category totals:', categoryTotals);
+    console.log('Total spending:', totalSpending);
+
     // Convert to CategorySummary format
     const categories = Object.entries(categoryTotals)
       .map(([name, amount]) => ({
@@ -64,6 +89,7 @@ class CSVService {
       .sort((a, b) => b.amount - a.amount)
       .slice(0, 5); // Top 5 categories
 
+    console.log('Processed categories:', categories);
     return categories;
   }
 
