@@ -1,16 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, TrendingUp } from 'lucide-react';
+import { TrendingUp } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, LabelList } from 'recharts';
 import SpendingTracker from './SpendingTracker';
 import CategoryBreakdown from './CategoryBreakdown';
 import { ChatInterface, ChatMessage, ChartConfig } from './ChatInterface';
 import { DynamicChart } from './DynamicChart';
 import { aiService } from '@/services/aiService';
-interface InsightDetailProps {
-  onBackClick: () => void;
-}
+interface InsightDetailProps {}
 const spendingData = [{
   month: 'Feb',
   amount: 1800,
@@ -36,9 +34,7 @@ const spendingData = [{
   amount: 2800,
   label: '$2800'
 }];
-const InsightDetail = ({
-  onBackClick
-}: InsightDetailProps) => {
+const InsightDetail = ({}: InsightDetailProps) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -99,13 +95,7 @@ const InsightDetail = ({
       <header className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <div className="flex items-center gap-4">
-              <Button variant="ghost" size="sm" onClick={onBackClick} className="flex items-center gap-2 hover:bg-gray-100">
-                <ArrowLeft className="w-4 h-4" />
-                Back
-              </Button>
-              <div className="text-2xl font-bold text-blue-600">Big Lending Bank</div>
-            </div>
+            <div className="text-2xl font-bold text-blue-600">Big Lending Bank</div>
             <div className="flex items-center gap-4">
               <Button variant="ghost" size="sm">Need help?</Button>
               <div className="flex items-center gap-2">

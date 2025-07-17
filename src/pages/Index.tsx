@@ -23,7 +23,7 @@ const Index = () => {
       {!showInsightDetail ? (
         <Dashboard onInsightClick={handleInsightClick} />
       ) : (
-        <InsightDetail onBackClick={handleBackClick} />
+        <InsightDetail />
       )}
     </>
   );
