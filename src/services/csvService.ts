@@ -30,6 +30,15 @@ class CSVService {
     'Luxury Retail': '💎'
   };
 
+  // Use June 2025 as our reference "current month" since data ends there
+  private getCurrentMonthFilter() {
+    return { month: 5, year: 2025 }; // June is month 5 (0-indexed)
+  }
+
+  private getPreviousMonthFilter() {
+    return { month: 4, year: 2025 }; // May is month 4 (0-indexed)
+  }
+
   async loadCSVData(csvContent: string): Promise<void> {
     const lines = csvContent.trim().split('\n');
     const headers = lines[0].split(',').map(h => h.trim());
@@ -65,27 +74,26 @@ class CSVService {
   }
 
   getCategoryBreakdown(): CategorySummary[] {
-    const currentMonth = new Date().getMonth();
-    const currentYear = new Date().getFullYear();
+    const { month, year } = this.getCurrentMonthFilter();
     
-    // Filter transactions for current month only
+    // Filter transactions for June 2025
     const currentMonthTransactions = this.transactions.filter(t => {
       const date = new Date(t.transaction_date);
-      return date.getMonth() === currentMonth && date.getFullYear() === currentYear;
+      return date.getMonth() === month && date.getFullYear() === year;
     });
 
     const categoryTotals: Record<string, number> = {};
     let totalSpending = 0;
 
-    // Sum spending by category for current month only
+    // Sum spending by category for June 2025
     currentMonthTransactions.forEach(transaction => {
       const category = transaction.transaction_category;
       categoryTotals[category] = (categoryTotals[category] || 0) + transaction.transaction_amount;
       totalSpending += transaction.transaction_amount;
     });
 
-    console.log('Current month category totals:', categoryTotals);
-    console.log('Current month total spending:', totalSpending);
+    console.log('June 2025 category totals:', categoryTotals);
+    console.log('June 2025 total spending:', totalSpending);
 
     // Convert to CategorySummary format
     const categories = Object.entries(categoryTotals)
@@ -98,18 +106,17 @@ class CSVService {
       .sort((a, b) => b.amount - a.amount)
       .slice(0, 5); // Top 5 categories
 
-    console.log('Current month processed categories:', categories);
+    console.log('June 2025 processed categories:', categories);
     return categories;
   }
 
   getMonthlySpendingData(): MonthlySpending[] {
-    const currentMonth = new Date().getMonth();
-    const currentYear = new Date().getFullYear();
+    const { month, year } = this.getCurrentMonthFilter();
     
-    // Filter transactions for current month
+    // Filter transactions for June 2025
     const currentMonthTransactions = this.transactions.filter(t => {
       const date = new Date(t.transaction_date);
-      return date.getMonth() === currentMonth && date.getFullYear() === currentYear;
+      return date.getMonth() === month && date.getFullYear() === year;
     });
 
     // Group by day and accumulate spending
@@ -152,27 +159,23 @@ class CSVService {
   }
 
   getCurrentMonthSpending(): number {
-    const currentMonth = new Date().getMonth();
-    const currentYear = new Date().getFullYear();
+    const { month, year } = this.getCurrentMonthFilter();
     
     return this.transactions
       .filter(t => {
         const date = new Date(t.transaction_date);
-        return date.getMonth() === currentMonth && date.getFullYear() === currentYear;
+        return date.getMonth() === month && date.getFullYear() === year;
       })
       .reduce((total, t) => total + t.transaction_amount, 0);
   }
 
   getPreviousMonthSpending(): number {
-    const currentDate = new Date();
-    const prevMonth = currentDate.getMonth() - 1;
-    const prevYear = prevMonth < 0 ? currentDate.getFullYear() - 1 : currentDate.getFullYear();
-    const actualPrevMonth = prevMonth < 0 ? 11 : prevMonth;
+    const { month, year } = this.getPreviousMonthFilter();
     
     return this.transactions
       .filter(t => {
         const date = new Date(t.transaction_date);
-        return date.getMonth() === actualPrevMonth && date.getFullYear() === prevYear;
+        return date.getMonth() === month && date.getFullYear() === year;
       })
       .reduce((total, t) => total + t.transaction_amount, 0);
   }
@@ -188,16 +191,16 @@ class CSVService {
     
     let insight = '';
     if (change > 0) {
-      insight = `Your spending increased by $${Math.round(change)} (${percentChange}%) this month. `;
+      insight = `Your spending increased by $${Math.round(change)} (${percentChange}%) in June compared to May. `;
     } else if (change < 0) {
-      insight = `Great news! Your spending decreased by $${Math.round(Math.abs(change))} (${Math.abs(percentChange)}%) this month. `;
+      insight = `Great news! Your spending decreased by $${Math.round(Math.abs(change))} (${Math.abs(percentChange)}%) in June compared to May. `;
     } else {
-      insight = 'Your spending remained consistent this month. ';
+      insight = 'Your spending remained consistent between May and June. ';
     }
     
     const topCategory = categories[0];
     if (topCategory) {
-      insight += `Your largest expense category is ${topCategory.name} at $${topCategory.amount} (${topCategory.value}% of total spending).`;
+      insight += `Your largest expense category in June was ${topCategory.name} at $${topCategory.amount} (${topCategory.value}% of total spending).`;
     }
 
     return {
