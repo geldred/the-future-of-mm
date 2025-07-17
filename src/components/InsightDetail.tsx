@@ -8,7 +8,10 @@ import CategoryBreakdown from './CategoryBreakdown';
 import { ChatInterface, ChatMessage, ChartConfig } from './ChatInterface';
 import { DynamicChart } from './DynamicChart';
 import { aiService } from '@/services/aiService';
+import { Link } from 'react-router-dom';
+
 interface InsightDetailProps {}
+
 const spendingData = [{
   month: 'Feb',
   amount: 1800,
@@ -34,11 +37,13 @@ const spendingData = [{
   amount: 2800,
   label: '$2800'
 }];
+
 const InsightDetail = ({}: InsightDetailProps) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [currentChart, setCurrentChart] = useState<ChartConfig | null>(null);
+
   useEffect(() => {
     // Scroll to the bottom card when component mounts
     const timer = setTimeout(() => {
@@ -51,6 +56,7 @@ const InsightDetail = ({}: InsightDetailProps) => {
     }, 100);
     return () => clearTimeout(timer);
   }, []);
+
   const handleSendMessage = async (message: string) => {
     const userMessage: ChatMessage = {
       id: Date.now().toString(),
@@ -87,15 +93,19 @@ const InsightDetail = ({}: InsightDetailProps) => {
       setIsLoading(false);
     }
   };
+
   const handleChartGenerated = (chartConfig: ChartConfig) => {
     setCurrentChart(chartConfig);
   };
+
   return <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       {/* Header */}
       <header className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <div className="text-2xl font-bold text-blue-600">Big Lending Bank</div>
+            <Link to="/" className="text-2xl font-bold text-blue-600 hover:text-blue-700 transition-colors">
+              Big Lending Bank
+            </Link>
             <div className="flex items-center gap-4">
               <Button variant="ghost" size="sm">Need help?</Button>
               <div className="flex items-center gap-2">
@@ -196,4 +206,5 @@ const InsightDetail = ({}: InsightDetailProps) => {
       </main>
     </div>;
 };
+
 export default InsightDetail;

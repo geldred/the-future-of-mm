@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { CreditCard, TrendingUp, Eye, Gift } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -17,7 +17,9 @@ const Dashboard = () => {
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
               <div className="flex-shrink-0">
-                <div className="text-2xl font-bold text-blue-600">Big Lending Bank</div>
+                <Link to="/" className="text-2xl font-bold text-blue-600 hover:text-blue-700 transition-colors">
+                  Big Lending Bank
+                </Link>
               </div>
             </div>
             <div className="flex items-center gap-4">
