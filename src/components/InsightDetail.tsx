@@ -63,7 +63,7 @@ const InsightDetail = ({ onBackClick }: InsightDetailProps) => {
           <CardHeader>
             <CardTitle className="text-2xl font-semibold text-gray-900 flex items-center gap-2">
               <TrendingUp className="w-6 h-6 text-blue-600" />
-              Spending Insight
+              Monthly Spend Insight
             </CardTitle>
           </CardHeader>
           <CardContent>
