@@ -107,7 +107,7 @@ export default {
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
-				'highlight-border': 'highlight-border 1s ease-in-out forwards'
+				'highlight-border': 'highlight-border 2s ease-in-out forwards'
 			}
 		}
 	},
