@@ -65,18 +65,27 @@ class CSVService {
   }
 
   getCategoryBreakdown(): CategorySummary[] {
+    const currentMonth = new Date().getMonth();
+    const currentYear = new Date().getFullYear();
+    
+    // Filter transactions for current month only
+    const currentMonthTransactions = this.transactions.filter(t => {
+      const date = new Date(t.transaction_date);
+      return date.getMonth() === currentMonth && date.getFullYear() === currentYear;
+    });
+
     const categoryTotals: Record<string, number> = {};
     let totalSpending = 0;
 
-    // Sum spending by category
-    this.transactions.forEach(transaction => {
+    // Sum spending by category for current month only
+    currentMonthTransactions.forEach(transaction => {
       const category = transaction.transaction_category;
       categoryTotals[category] = (categoryTotals[category] || 0) + transaction.transaction_amount;
       totalSpending += transaction.transaction_amount;
     });
 
-    console.log('Category totals:', categoryTotals);
-    console.log('Total spending:', totalSpending);
+    console.log('Current month category totals:', categoryTotals);
+    console.log('Current month total spending:', totalSpending);
 
     // Convert to CategorySummary format
     const categories = Object.entries(categoryTotals)
@@ -89,7 +98,7 @@ class CSVService {
       .sort((a, b) => b.amount - a.amount)
       .slice(0, 5); // Top 5 categories
 
-    console.log('Processed categories:', categories);
+    console.log('Current month processed categories:', categories);
     return categories;
   }
 
