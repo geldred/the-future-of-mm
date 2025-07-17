@@ -84,11 +84,30 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				'highlight-border': {
+					'0%': {
+						borderColor: 'transparent',
+						borderWidth: '0px'
+					},
+					'10%': {
+						borderColor: '#3b82f6',
+						borderWidth: '3px'
+					},
+					'90%': {
+						borderColor: '#3b82f6',
+						borderWidth: '3px'
+					},
+					'100%': {
+						borderColor: 'transparent',
+						borderWidth: '0px'
+					}
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'highlight-border': 'highlight-border 1s ease-in-out forwards'
 			}
 		}
 	},
