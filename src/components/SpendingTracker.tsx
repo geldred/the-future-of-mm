@@ -3,7 +3,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ChevronDown, TrendingUp, TrendingDown } from 'lucide-react';
-import { AreaChart, Area, XAxis, ResponsiveContainer } from 'recharts';
+import { AreaChart, Area, XAxis, ResponsiveContainer, LabelList } from 'recharts';
 import { csvService } from '@/services/csvService';
 import { useCSVData } from '@/hooks/useCSVData';
 
@@ -67,7 +67,7 @@ const SpendingTracker = () => {
       <CardContent className="pt-0">
         <div className="h-48 w-full mb-6">
           <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={monthlyData.length > 0 ? monthlyData : [{ day: '01', amount: 0 }]} margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
+            <AreaChart data={monthlyData.length > 0 ? monthlyData : [{ day: '01', amount: 0 }]} margin={{ top: 20, right: 5, left: 5, bottom: 5 }}>
               <defs>
                 <linearGradient id="spendingGradient" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="0%" stopColor="#0f766e" stopOpacity={0.3} />
@@ -86,7 +86,16 @@ const SpendingTracker = () => {
                 stroke="#0f766e" 
                 strokeWidth={2}
                 fill="url(#spendingGradient)"
-              />
+                dot={{ r: 4, fill: "#0f766e", strokeWidth: 0 }}
+              >
+                <LabelList 
+                  dataKey="amount" 
+                  position="top" 
+                  offset={10}
+                  className="text-xs font-medium fill-gray-600" 
+                  formatter={(value: number) => `$${Math.round(value / 1000)}k`}
+                />
+              </Area>
             </AreaChart>
           </ResponsiveContainer>
         </div>
