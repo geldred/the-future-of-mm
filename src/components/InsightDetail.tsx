@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -6,34 +5,44 @@ import { ArrowLeft, TrendingUp } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, LabelList } from 'recharts';
 import SpendingTracker from './SpendingTracker';
 import CategoryBreakdown from './CategoryBreakdown';
-
 interface InsightDetailProps {
   onBackClick: () => void;
 }
-
-const spendingData = [
-  { month: 'Feb', amount: 1800, label: '$1800' },
-  { month: 'Mar', amount: 2200, label: '$2200' },
-  { month: 'Apr', amount: 1800, label: '$1800' },
-  { month: 'May', amount: 2200, label: '$2200' },
-  { month: 'Jun', amount: 1800, label: '$1800' },
-  { month: 'Jul', amount: 2800, label: '$2800' },
-];
-
-const InsightDetail = ({ onBackClick }: InsightDetailProps) => {
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+const spendingData = [{
+  month: 'Feb',
+  amount: 1800,
+  label: '$1800'
+}, {
+  month: 'Mar',
+  amount: 2200,
+  label: '$2200'
+}, {
+  month: 'Apr',
+  amount: 1800,
+  label: '$1800'
+}, {
+  month: 'May',
+  amount: 2200,
+  label: '$2200'
+}, {
+  month: 'Jun',
+  amount: 1800,
+  label: '$1800'
+}, {
+  month: 'Jul',
+  amount: 2800,
+  label: '$2800'
+}];
+const InsightDetail = ({
+  onBackClick
+}: InsightDetailProps) => {
+  return <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       {/* Header */}
       <header className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center gap-4">
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                onClick={onBackClick}
-                className="flex items-center gap-2 hover:bg-gray-100"
-              >
+              <Button variant="ghost" size="sm" onClick={onBackClick} className="flex items-center gap-2 hover:bg-gray-100">
                 <ArrowLeft className="w-4 h-4" />
                 Back
               </Button>
@@ -98,9 +107,7 @@ const InsightDetail = ({ onBackClick }: InsightDetailProps) => {
               {/* Right Column - Visualization */}
               <div className="space-y-4">
                 <div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                    Your monthly spending
-                  </h3>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">Total Monthly Spend</h3>
                   <p className="text-gray-600">
                     You spent $1000 more than last month.
                   </p>
@@ -108,25 +115,16 @@ const InsightDetail = ({ onBackClick }: InsightDetailProps) => {
                 
                 <div className="h-80 w-full">
                   <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={spendingData} margin={{ top: 40, right: 30, left: 20, bottom: 5 }}>
-                      <XAxis 
-                        dataKey="month" 
-                        axisLine={false}
-                        tickLine={false}
-                        className="text-xs"
-                      />
+                    <BarChart data={spendingData} margin={{
+                    top: 40,
+                    right: 30,
+                    left: 20,
+                    bottom: 5
+                  }}>
+                      <XAxis dataKey="month" axisLine={false} tickLine={false} className="text-xs" />
                       <YAxis hide />
-                      <Bar 
-                        dataKey="amount" 
-                        fill="#0f766e"
-                        radius={[4, 4, 0, 0]}
-                        className="hover:opacity-80 transition-opacity"
-                      >
-                        <LabelList 
-                          dataKey="label" 
-                          position="top" 
-                          className="text-xs font-medium fill-gray-600"
-                        />
+                      <Bar dataKey="amount" fill="#0f766e" radius={[4, 4, 0, 0]} className="hover:opacity-80 transition-opacity">
+                        <LabelList dataKey="label" position="top" className="text-xs font-medium fill-gray-600" />
                       </Bar>
                     </BarChart>
                   </ResponsiveContainer>
@@ -137,8 +135,6 @@ const InsightDetail = ({ onBackClick }: InsightDetailProps) => {
           </CardContent>
         </Card>
       </main>
-    </div>
-  );
+    </div>;
 };
-
 export default InsightDetail;
