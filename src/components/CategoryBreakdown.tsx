@@ -1,15 +1,30 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-
-const categoryData = [
-  { name: 'Dining', value: 35, amount: 1687, emoji: '🍽️' },
-  { name: 'Groceries', value: 25, amount: 1205, emoji: '🛒' },
-  { name: 'Entertainment', value: 18, amount: 868, emoji: '🎬' },
-  { name: 'Transportation', value: 12, amount: 578, emoji: '🚗' },
-  { name: 'Other', value: 10, amount: 483, emoji: '📦' },
-];
+import { csvService } from '@/services/csvService';
+import { useCSVData } from '@/hooks/useCSVData';
 
 const CategoryBreakdown = () => {
+  const { isLoaded, isLoading } = useCSVData();
+  const categoryData = isLoaded ? csvService.getCategoryBreakdown() : [];
+
+  if (isLoading) {
+    return (
+      <Card className="bg-white shadow-lg border-0">
+        <CardContent className="p-6">
+          <div className="animate-pulse">
+            <div className="h-4 bg-gray-200 rounded w-1/3 mb-4"></div>
+            {[...Array(5)].map((_, i) => (
+              <div key={i} className="flex justify-between items-center py-2">
+                <div className="h-4 bg-gray-200 rounded w-1/4"></div>
+                <div className="h-4 bg-gray-200 rounded w-1/6"></div>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
     <Card className="bg-white shadow-lg border-0">
       <CardHeader>

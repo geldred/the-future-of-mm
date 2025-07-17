@@ -3,22 +3,35 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ChevronDown, TrendingUp, TrendingDown } from 'lucide-react';
 import { AreaChart, Area, XAxis, ResponsiveContainer } from 'recharts';
-
-const monthlyData = [
-  { day: '01', amount: 800 },
-  { day: '07', amount: 1800 },
-  { day: '14', amount: 2600 },
-  { day: '21', amount: 3400 },
-  { day: '28', amount: 4821 },
-];
+import { csvService } from '@/services/csvService';
+import { useCSVData } from '@/hooks/useCSVData';
 
 const SpendingTracker = () => {
-  const currentMonth = "April";
-  const currentAmount = 4821;
-  const lastMonthAmount = 4200;
+  const { isLoaded, isLoading } = useCSVData();
+  
+  // Get dynamic data from CSV service
+  const monthlyData = isLoaded ? csvService.getMonthlySpendingData() : [];
+  const currentAmount = isLoaded ? Math.round(csvService.getCurrentMonthSpending()) : 0;
+  const lastMonthAmount = isLoaded ? Math.round(csvService.getPreviousMonthSpending()) : 0;
+  
+  const currentMonth = new Date().toLocaleString('default', { month: 'long' });
   const difference = currentAmount - lastMonthAmount;
-  const percentChange = ((difference / lastMonthAmount) * 100).toFixed(1);
+  const percentChange = lastMonthAmount > 0 ? ((difference / lastMonthAmount) * 100).toFixed(1) : '0.0';
   const isIncrease = difference > 0;
+  
+  if (isLoading) {
+    return (
+      <Card className="bg-white shadow-lg border-0">
+        <CardContent className="p-6">
+          <div className="animate-pulse">
+            <div className="h-4 bg-gray-200 rounded w-1/4 mb-2"></div>
+            <div className="h-8 bg-gray-200 rounded w-1/2 mb-4"></div>
+            <div className="h-32 bg-gray-200 rounded"></div>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <Card className="bg-white shadow-lg border-0">
@@ -52,7 +65,7 @@ const SpendingTracker = () => {
       <CardContent className="pt-0">
         <div className="h-32 w-full mb-4">
           <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={monthlyData} margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
+            <AreaChart data={monthlyData.length > 0 ? monthlyData : [{ day: '01', amount: 0 }]} margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
               <defs>
                 <linearGradient id="spendingGradient" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="0%" stopColor="#0f766e" stopOpacity={0.3} />

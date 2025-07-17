@@ -1,5 +1,6 @@
 import OpenAI from 'openai';
 import { ChatMessage, ChartConfig } from '@/components/ChatInterface';
+import { csvService } from './csvService';
 
 // For demo purposes, we'll use a mock service that simulates AI responses
 // In production, you would configure this with your actual OpenAI API key
@@ -64,21 +65,60 @@ class AIService {
 
     const lowerMessage = message.toLowerCase();
     
-    // Find matching response based on keywords
-    const matchedResponse = this.mockResponses.find(response =>
-      response.trigger.some(keyword => lowerMessage.includes(keyword))
-    );
-
-    if (matchedResponse) {
+    // Generate dynamic responses based on actual CSV data
+    if (lowerMessage.includes('reduce') || lowerMessage.includes('dining') || lowerMessage.includes('expenses') || lowerMessage.includes('food')) {
+      const categories = csvService.getCategoryBreakdown();
+      const diningCategory = categories.find(c => c.name.toLowerCase().includes('dining'));
+      const trends = csvService.getSpendingTrends();
+      
       return {
-        content: matchedResponse.response,
-        chartConfig: matchedResponse.chartConfig
+        content: `Based on your spending data, ${diningCategory ? `you spent $${diningCategory.amount} on dining (${diningCategory.value}% of total)` : 'dining is a significant expense'}. Here are some strategies to reduce dining expenses: 1) Set a weekly dining budget, 2) Cook at home more often, 3) Use cashback apps for restaurant purchases.`,
+        chartConfig: {
+          type: 'bar' as const,
+          title: 'Monthly Dining Expenses',
+          description: 'Your dining expenses over recent months',
+          data: trends.map(t => ({ name: t.month, value: Math.round(t.amount * 0.35) })) // Estimate dining portion
+        }
       };
     }
 
-    // Default response for unmatched queries
+    if (lowerMessage.includes('trend') || lowerMessage.includes('analysis') || lowerMessage.includes('pattern') || lowerMessage.includes('time')) {
+      const trends = csvService.getSpendingTrends();
+      const currentSpending = csvService.getCurrentMonthSpending();
+      const previousSpending = csvService.getPreviousMonthSpending();
+      const change = currentSpending - previousSpending;
+      const percentChange = previousSpending > 0 ? Math.round((change / previousSpending) * 100) : 0;
+      
+      return {
+        content: `Your spending shows ${change > 0 ? 'an increase' : 'a decrease'} of ${Math.abs(percentChange)}% compared to last month. ${change > 0 ? 'Consider setting monthly spending alerts and budget categories.' : 'Great job on reducing your expenses!'}`,
+        chartConfig: {
+          type: 'line' as const,
+          title: 'Spending Trend Analysis',
+          description: 'Your spending trend over recent months',
+          data: trends.map(t => ({ name: t.month, value: t.amount }))
+        }
+      };
+    }
+
+    if (lowerMessage.includes('category') || lowerMessage.includes('breakdown') || lowerMessage.includes('distribution') || lowerMessage.includes('where')) {
+      const categories = csvService.getCategoryBreakdown();
+      const totalSpending = csvService.getCurrentMonthSpending();
+      
+      return {
+        content: `Your spending breakdown shows: ${categories.map(c => `${c.name} (${c.value}%)`).join(', ')}. ${categories[0] ? `${categories[0].name} represents your largest discretionary category with room for optimization.` : ''}`,
+        chartConfig: {
+          type: 'pie' as const,
+          title: 'Spending by Category',
+          description: `Distribution of your $${Math.round(totalSpending)} in expenses`,
+          data: categories.map(c => ({ name: c.name, value: c.amount }))
+        }
+      };
+    }
+
+    // Default response with insights
+    const insights = csvService.getInsights();
     return {
-      content: "I can help you analyze your spending patterns. Try asking about reducing expenses, trend analysis, or category breakdowns. You can also ask about specific months or spending categories for more detailed insights.",
+      content: insights.content + " I can help you analyze your spending patterns. Try asking about reducing expenses, trend analysis, or category breakdowns.",
     };
   }
 }
