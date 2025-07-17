@@ -132,16 +132,6 @@ const InsightDetail = ({ onBackClick }: InsightDetailProps) => {
                   </ResponsiveContainer>
                 </div>
 
-                {/* Highlight box for latest month */}
-                <div className="p-4 bg-teal-50 rounded-lg border border-teal-100">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium text-gray-700">July Spending</span>
-                    <span className="text-lg font-bold text-teal-600">+$1000</span>
-                  </div>
-                  <p className="text-xs text-gray-600 mt-1">
-                    40% increase from your average monthly spending
-                  </p>
-                </div>
               </div>
             </div>
           </CardContent>
