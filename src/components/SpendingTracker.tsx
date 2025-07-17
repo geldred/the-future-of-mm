@@ -91,16 +91,22 @@ const SpendingTracker = () => {
               />
               <LabelList 
                 dataKey="amount" 
-                content={({ x, y, value }) => (
-                  <text 
-                    x={x} 
-                    y={y - 15} 
-                    textAnchor="middle" 
-                    className="text-xs font-medium fill-gray-700"
-                  >
-                    ${Math.round(value / 1000)}k
-                  </text>
-                )}
+                content={({ x, y, value }) => {
+                  const xPos = Number(x) || 0;
+                  const yPos = Number(y) || 0;
+                  const numValue = Number(value) || 0;
+                  
+                  return (
+                    <text 
+                      x={xPos} 
+                      y={yPos - 15} 
+                      textAnchor="middle" 
+                      className="text-xs font-medium fill-gray-700"
+                    >
+                      ${Math.round(numValue / 1000)}k
+                    </text>
+                  );
+                }}
               />
             </AreaChart>
           </ResponsiveContainer>
