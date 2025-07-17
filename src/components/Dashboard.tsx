@@ -1,16 +1,14 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { CreditCard, TrendingUp, Eye, Gift } from 'lucide-react';
-
 interface DashboardProps {
   onInsightClick: () => void;
 }
-
-const Dashboard = ({ onInsightClick }: DashboardProps) => {
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+const Dashboard = ({
+  onInsightClick
+}: DashboardProps) => {
+  return <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       {/* Header */}
       <header className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -45,7 +43,7 @@ const Dashboard = ({ onInsightClick }: DashboardProps) => {
             <CardContent className="p-6">
               <div className="flex justify-between items-start mb-4">
                 <div>
-                  <h3 className="text-lg font-medium mb-1">VENTURE X</h3>
+                  <h3 className="text-lg font-medium mb-1">ADVENTURE Y</h3>
                   <p className="text-xs text-gray-300">...1681</p>
                 </div>
                 <CreditCard className="w-6 h-6 text-gray-300" />
@@ -56,11 +54,7 @@ const Dashboard = ({ onInsightClick }: DashboardProps) => {
                 </div>
                 <p className="text-xs text-gray-300 uppercase tracking-wider">Current Balance</p>
               </div>
-              <Button 
-                variant="outline" 
-                size="sm" 
-                className="bg-transparent border-white text-white hover:bg-white hover:text-slate-900 transition-colors"
-              >
+              <Button variant="outline" size="sm" className="bg-transparent border-white text-white hover:bg-white hover:text-slate-900 transition-colors">
                 View Account
               </Button>
             </CardContent>
@@ -83,19 +77,11 @@ const Dashboard = ({ onInsightClick }: DashboardProps) => {
                 <p className="text-xs text-gray-300 uppercase tracking-wider">Available Balance</p>
               </div>
               <div className="mb-4">
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  className="bg-transparent border-white text-white hover:bg-white hover:text-teal-800 transition-colors mb-2"
-                >
+                <Button variant="outline" size="sm" className="bg-transparent border-white text-white hover:bg-white hover:text-teal-800 transition-colors mb-2">
                   View Account
                 </Button>
               </div>
-              <Button 
-                variant="outline" 
-                size="sm" 
-                className="bg-teal-600 border-teal-500 text-white hover:bg-teal-500 transition-colors flex items-center gap-2"
-              >
+              <Button variant="outline" size="sm" className="bg-teal-600 border-teal-500 text-white hover:bg-teal-500 transition-colors flex items-center gap-2">
                 <Eye className="w-4 h-4" />
                 View your debit card
               </Button>
@@ -106,10 +92,7 @@ const Dashboard = ({ onInsightClick }: DashboardProps) => {
         {/* Bottom Section Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Monthly Spend Insight */}
-          <Card 
-            className="bg-white border shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer group"
-            onClick={onInsightClick}
-          >
+          <Card className="bg-white border shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer group" onClick={onInsightClick}>
             <CardContent className="p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors">
                 Monthly Spend Recap
@@ -117,9 +100,7 @@ const Dashboard = ({ onInsightClick }: DashboardProps) => {
               <p className="text-gray-600 mb-4">
                 Take a deeper look at how you spent this month to get ahead on things for next month
               </p>
-              <Button 
-                className="bg-blue-600 text-white hover:bg-blue-700 border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
-              >
+              <Button className="bg-blue-600 text-white hover:bg-blue-700 border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
                 View Insight
               </Button>
             </CardContent>
@@ -150,11 +131,7 @@ const Dashboard = ({ onInsightClick }: DashboardProps) => {
                   <span>Entertainment</span>
                 </div>
               </div>
-              <Button 
-                variant="outline" 
-                size="sm" 
-                className="bg-transparent border-white text-white hover:bg-white hover:text-emerald-700 transition-colors"
-              >
+              <Button variant="outline" size="sm" className="bg-transparent border-white text-white hover:bg-white hover:text-emerald-700 transition-colors">
                 View Rewards
               </Button>
             </CardContent>
@@ -180,8 +157,6 @@ const Dashboard = ({ onInsightClick }: DashboardProps) => {
           </Card>
         </div>
       </main>
-    </div>
-  );
+    </div>;
 };
-
 export default Dashboard;
