@@ -118,8 +118,7 @@ const Dashboard = ({ onInsightClick }: DashboardProps) => {
                 Take a deeper look at how you spent this month to get ahead on things for next month
               </p>
               <Button 
-                variant="outline" 
-                className="group-hover:bg-blue-50 group-hover:border-blue-300 transition-colors"
+                className="bg-blue-600 text-white hover:bg-blue-700 border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
               >
                 View Insight
               </Button>

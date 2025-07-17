@@ -68,7 +68,7 @@ const InsightDetail = ({
         </div>
 
         {/* Combined Insight Card */}
-        <Card className="bg-white shadow-lg border-0">
+        <Card className="bg-white shadow-lg border-0 animate-fade-in animate-scale-in">
           <CardHeader>
             <CardTitle className="text-2xl font-semibold text-gray-900 flex items-center gap-2">
               <TrendingUp className="w-6 h-6 text-blue-600" />
