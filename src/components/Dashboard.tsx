@@ -112,7 +112,7 @@ const Dashboard = ({ onInsightClick }: DashboardProps) => {
           >
             <CardContent className="p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors">
-                Your monthly spend recap is ready
+                Monthly Spend Recap
               </h3>
               <p className="text-gray-600 mb-4">
                 Take a deeper look at how you spent this month to get ahead on things for next month
