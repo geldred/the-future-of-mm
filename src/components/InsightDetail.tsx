@@ -4,6 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, TrendingUp } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer } from 'recharts';
+import SpendingTracker from './SpendingTracker';
+import CategoryBreakdown from './CategoryBreakdown';
 
 interface InsightDetailProps {
   onBackClick: () => void;
@@ -50,6 +52,12 @@ const InsightDetail = ({ onBackClick }: InsightDetailProps) => {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Feature Tiles */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+          <SpendingTracker />
+          <CategoryBreakdown />
+        </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Left Column - Insight Text */}
           <div className="space-y-6">
